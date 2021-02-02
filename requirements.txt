@@ -1,0 +1,4 @@
+pywebview
+wtforms
+Flask
+flask-wtf

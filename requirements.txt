@@ -1,4 +1,9 @@
+# Webview and Flask Server
 pywebview
 wtforms
 Flask
 flask-wtf
+
+# For Macro Management
+keyboard
+mouse

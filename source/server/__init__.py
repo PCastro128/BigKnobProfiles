@@ -3,7 +3,7 @@ from flask import Flask
 PORT = 5001
 
 app = Flask(__name__)
-from server import routes
+from source.server import routes
 
 
 def start():

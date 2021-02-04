@@ -4,7 +4,7 @@ import multiprocessing
 
 from source import server
 from source.macros.bigknob import BigKnobKeyboard
-from source.macros.profiles import verify_project_root_exists
+from source.macros.profiles import verify_project_files_exist, select_default_profile
 
 
 def start_server():
@@ -28,7 +28,8 @@ class BigKnobApp:
         self.app_is_running = True
         self.server_process = start_server()
         self.bigknob_keyboard = BigKnobKeyboard(self)
-        verify_project_root_exists()
+        verify_project_files_exist()
+        select_default_profile()
 
     def start(self):
         self._create_hotkeys()
@@ -62,3 +63,19 @@ class BigKnobApp:
 
     def stop(self):
         self.app_is_running = False
+
+
+class SessionData:
+    def __init__(self, data=None):
+        if data is None:
+            data = {}
+        self.__dict__["data"] = data
+
+    def __getattr__(self, item):
+        return self.__dict__["data"][item]
+
+    def __setattr__(self, key, value):
+        self.__dict__["data"][key] = value
+
+
+SESSION = SessionData()

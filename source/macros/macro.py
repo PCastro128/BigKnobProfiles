@@ -3,12 +3,11 @@ from abc import ABC, abstractmethod
 
 
 class Macro(ABC):
-    def __init__(self, profile, macro_data):
-        self.profile = profile
-        self.name = macro_data["name"]
-        self.type = macro_data["type"]
-        self.trigger_hotkey = macro_data["hotkey"]
-        self.data = macro_data["data"]
+    def __init__(self, name, macro_type, hotkey, data):
+        self.name = name
+        self.type = macro_type
+        self.trigger_hotkey = hotkey
+        self.data = data
         self.hotkey_remove_func = None
 
     @abstractmethod
@@ -47,6 +46,15 @@ class Macro(ABC):
             "data": self.data
         }
 
+    @staticmethod
+    def from_json(macro_data):
+        macro_type = macro_data["type"]
+        if macro_data["type"] not in MACRO_TYPES:
+            raise RuntimeError(f"Macro type '{macro_data['type']}' doesn't exist.")
+
+        macro_class = MACRO_TYPES[macro_type]
+        return macro_class(macro_data["name"], macro_data["type"], macro_data["hotkey"], macro_data["data"])
+
 
 class HotkeyMacro(Macro):
     def trigger(self):
@@ -56,13 +64,6 @@ class HotkeyMacro(Macro):
 MACRO_TYPES = {
     "hotkey": HotkeyMacro
 }
-
-
-def get_macro_from_json(profile, macro_data):
-    macro_type = macro_data["type"]
-    if macro_data["type"] not in MACRO_TYPES:
-        raise RuntimeError(f"Macro type '{macro_data['type']}' doesn't exist.")
-    return MACRO_TYPES[macro_type](profile, macro_data)
 
 
 def get_macro_callback(remap_key):

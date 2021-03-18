@@ -2,6 +2,7 @@ import os
 import json
 import source
 from source.macros import macro
+from source import common
 
 
 class Profile:
@@ -39,20 +40,9 @@ class Profile:
         return new_profile
 
 
-def verify_project_files_exist():
-    for dir_path in source.PROJECT_DIRS:
-        if not os.path.exists(dir_path):
-            os.mkdir(dir_path)
-
-    if not os.path.exists(source.SETTINGS_FILE):
-        write_json(source.SETTINGS_FILE, source.DEFAULT_SETTINGS_DATA, indent=4)
-    if not os.path.exists(source.DEFAULT_PROFILE_FILE):
-        write_json(source.DEFAULT_PROFILE_FILE, get_default_profile().to_json(), indent=4)
-
-
 def get_profile(profile_name):
     file_path = os.path.join(source.PROFILES_DIR, f"{profile_name}.json")
-    profile_json = read_json(file_path)
+    profile_json = common.read_json(file_path)
     return Profile.from_json(profile_json)
 
 
@@ -84,19 +74,9 @@ def select_default_profile():
 def select_profile(profile_name):
     current_settings = get_settings()
     current_settings["current_profile"] = profile_name
-    write_json(source.SETTINGS_FILE, current_settings, indent=4)
+    common.write_json(source.SETTINGS_FILE, current_settings, indent=4)
 
 
 def get_settings():
-    return read_json(source.SETTINGS_FILE)
+    return common.read_json(source.SETTINGS_FILE)
 
-
-def read_json(file_path):
-    with open(file_path) as read_file:
-        contents = json.load(read_file)
-    return contents
-
-
-def write_json(file_path, contents, **kwargs):
-    with open(file_path, "w") as write_file:
-        json.dump(contents, write_file, **kwargs)

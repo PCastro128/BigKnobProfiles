@@ -16,7 +16,10 @@ class BigKnobKeyboard:
         pass
 
     def unload_current_profile(self):
-        keyboard.unhook_all_hotkeys()
+        try:
+            keyboard.unhook_all_hotkeys()
+        except AttributeError:
+            pass
         if self.current_profile:
             self.current_profile.unload()
             self.current_profile = None

@@ -49,3 +49,5 @@ def verify_project_files_exist(session):
         common.write_json(source.DEFAULT_PROFILE_FILE, get_default_profile().to_json(), indent=4)
     if not os.path.exists(source.STATUS_FILE):
         write_status(session)
+    if os.path.exists(source.QUIT_FILE):
+        os.remove(QUIT_FILE)
